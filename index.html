@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InvestFuel - Démonstration Produit</title>
+<style>
+:root {
+--bg-color: #0f172a;
+--card-bg: #1e293b;
+--primary: #3b82f6;
+--accent: #10b981;
+--text-main: #f8fafc;
+--text-muted: #94a3b8;
+--border-color: #334155;
+}
+
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+background-color: var(--bg-color);
+color: var(--text-main);
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+padding: 20px;
+}
+
+.app-container {
+background-color: var(--card-bg);
+width: 100%;
+max-width: 480px;
+border-radius: 20px;
+padding: 24px;
+box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+border: 1px solid var(--border-color);
+}
+
+.header {
+text-align: center;
+margin-bottom: 24px;
+}
+
+.header h1 {
+font-size: 1.5rem;
+color: var(--primary);
+margin-bottom: 6px;
+}
+
+.header p {
+font-size: 0.875rem;
+color: var(--text-muted);
+}
+
+.profile-badge {
+background-color: rgba(59, 130, 246, 0.1);
+border: 1px solid var(--primary);
+color: var(--primary);
+padding: 8px 12px;
+border-radius: 12px;
+font-size: 0.8rem;
+font-weight: 600;
+text-align: center;
+margin-bottom: 20px;
+}
+
+.control-group {
+margin-bottom: 20px;
+}
+
+.control-label {
+display: flex;
+justify-content: space-between;
+margin-bottom: 8px;
+font-size: 0.9rem;
+color: var(--text-main);
+}
+
+.control-value {
+font-weight: bold;
+color: var(--primary);
+}
+
+.control-value.green {
+color: var(--accent);
+}
+
+input[type="range"] {
+width: 100%;
+height: 6px;
+background: var(--border-color);
+border-radius: 5px;
+outline: none;
+accent-color: var(--primary);
+cursor: pointer;
+}
+
+.sectors-box {
+background-color: rgba(15, 23, 42, 0.5);
+border: 1px solid var(--border-color);
+border-radius: 12px;
+padding: 12px;
+margin-bottom: 20px;
+}
+
+.sectors-title {
+font-size: 0.8rem;
+color: var(--text-muted);
+margin-bottom: 8px;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+
+.tags {
+display: flex;
+flex-wrap: wrap;
+gap: 6px;
+}
+
+.tag {
+background-color: #334155;
+color: var(--text-main);
+font-size: 0.75rem;
+padding: 4px 8px;
+border-radius: 6px;
+}
+
+.divider {
+height: 1px;
+background-color: var(--border-color);
+margin: 20px 0;
+}
+
+.results-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 12px;
+}
+
+.result-card {
+background-color: rgba(15, 23, 42, 0.6);
+padding: 16px;
+border-radius: 12px;
+border: 1px solid var(--border-color);
+text-align: center;
+}
+
+.result-label {
+font-size: 0.75rem;
+color: var(--text-muted);
+margin-bottom: 4px;
+}
+
+.result-amount {
+font-size: 1.25rem;
+font-weight: bold;
+color: var(--accent);
+}
+
+.result-amount.blue {
+color: var(--primary);
+}
+
+.footer-note {
+text-align: center;
+margin-top: 20px;
+font-size: 0.75rem;
+color: var(--text-muted);
+}
+</style>
+</head>
+<body>
+
+<div class="app-container">
+<div class="header">
+<h1>InvestFuel</h1>
+<p>Simulateur de conversion d'épargne</p>
+</div>
+
+<div class="profile-badge">
+Profil type : Salarié au SMIC (1 400 € net/mois)
+</div>
+
+<!-- Curseur 1 : Dépenses quotidiennes -->
+<div class="control-group">
+<div class="control-label">
+<span>Dépenses courantes (courses, carburant, loisirs)</span>
+<span id="depensesVal" class="control-value">800 €</span>
+</div>
+<input type="range" id="depensesSlider" min="200" max="1200" step="50" value="800">
+</div>
+
+<!-- Curseur 2 : Pourcentage converti -->
+<div class="control-group">
+<div class="control-label">
+<span>Part réallouée vers l'investissement</span>
+<span id="tauxVal" class="control-value green">5 %</span>
+</div>
+<input type="range" id="tauxSlider" min="1" max="20" step="1" value="5">
+</div>
+
+<!-- Secteurs de placement -->
+<div class="sectors-box">
+<div class="sectors-title">Secteurs investis au choix</div>
+<div class="tags">
+<span class="tag">⚡ Énergie</span>
+<span class="tag">🛒 Grande Consommation</span>
+<span class="tag">👕 Mode & Équipement</span>
+<span class="tag">📈 Indices Mondiaux</span>
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Résultats dynamiques -->
+<div class="results-grid">
+<div class="result-card">
+<div class="result-label">Investi par mois</div>
+<div id="resMensuel" class="result-amount">40,00 €</div>
+</div>
+<div class="result-card">
+<div class="result-label">Effort accumulé / an</div>
+<div id="resAnnuel" class="result-amount blue">480,00 €</div>
+</div>
+</div>
+
+<p class="footer-note">Prototype interactif — Démonstration SILS / BGE</p>
+</div>
+
+<script>
+// Récupération des éléments
+const sliderDepenses = document.getElementById('depensesSlider');
+const sliderTaux = document.getElementById('tauxSlider');
+
+const txtDepenses = document.getElementById('depensesVal');
+const txtTaux = document.getElementById('tauxVal');
+const resMensuel = document.getElementById('resMensuel');
+const resAnnuel = document.getElementById('resAnnuel');
+
+// Formateur en Euros
+const formatEUR = new Intl.NumberFormat('fr-FR', {
+style: 'currency',
+currency: 'EUR'
+});
+
+// Fonction de calcul en temps réel
+function actualiser() {
+const depenses = parseFloat(sliderDepenses.value);
+const taux = parseFloat(sliderTaux.value);
+
+// Mise à jour des textes des curseurs
+txtDepenses.textContent = formatEUR.format(depenses);
+txtTaux.textContent = taux + ' %';
+
+// Calculs
+const mensuel = depenses * (taux / 100);
+const annuel = mensuel * 12;
+
+// Affichage dynamique des résultats
+resMensuel.textContent = formatEUR.format(mensuel);
+resAnnuel.textContent = formatEUR.format(annuel);
+}
+
+// Écoute des événements 'input' pour une réaction instantanée
+sliderDepenses.addEventListener('input', actualiser);
+sliderTaux.addEventListener('input', actualiser);
+
+// Lancement au chargement de la page
+actualiser();
+</script>
+
+</body>
+</html>
+
